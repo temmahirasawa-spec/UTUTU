@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Bricolage_Grotesque, Inter, JetBrains_Mono, Noto_Sans_JP } from 'next/font/google';
+import { Bricolage_Grotesque, JetBrains_Mono, Noto_Sans_JP, Zen_Kaku_Gothic_New } from 'next/font/google';
 import './globals.css';
 
 import LenisProvider from '@/components/LenisProvider';
@@ -13,11 +13,12 @@ const bricolage = Bricolage_Grotesque({
   display: 'swap',
   variable: '--font-bricolage',
 });
-// 本文 sans のフォールバック（主は Helvetica Neue / system）
-const inter = Inter({
+// 大見出し/ページタイトル（--sans）— Zen Kaku Gothic New（Bold=700。CSS の weight:800 指定は 700 にフォールバック）
+const zenKaku = Zen_Kaku_Gothic_New({
+  weight: ['400', '500', '700'],
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-zen-kaku',
 });
 // mono ラベル/数値
 const jetbrains = JetBrains_Mono({
@@ -53,10 +54,12 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const fontVars = `${bricolage.variable} ${inter.variable} ${jetbrains.variable} ${notoJp.variable}`;
+  const fontVars = `${bricolage.variable} ${zenKaku.variable} ${jetbrains.variable} ${notoJp.variable}`;
+  // フォント変数は :root（=html）に付与する。:root で宣言した --sans 等が
+  // var(--font-*) を解決できるようにするため（body に付けると親の :root から見えず無効化される）。
   return (
-    <html lang="en">
-      <body className={fontVars}>
+    <html lang="en" className={fontVars}>
+      <body>
         {/* fixed chrome */}
         <GridOverlay />
         <div className="blur-top" id="blurTop" aria-hidden="true" />

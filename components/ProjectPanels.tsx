@@ -14,8 +14,9 @@ export default function ProjectPanels({
   showAllCTA?: boolean;
 }) {
   return (
-    <section className="panels-stack" aria-label="Selected work">
-      {projects.map((p) => (
+    <>
+      <section className="panels-stack" aria-label="Selected work">
+        {projects.map((p) => (
         <Link
           className="panel"
           key={p.slug}
@@ -51,27 +52,18 @@ export default function ProjectPanels({
             <span className="panel__cta">View Case →</span>
           </div>
         </Link>
-      ))}
+        ))}
+      </section>
 
       {showAllCTA && (
-        <Link className="panel panel--all" href="/projects" aria-label="すべての実績を見る">
-          {/* 背景は後送 / TODO: 実画像へ差し替え */}
-          <div className="panel__bg" aria-hidden="true" />
-          <div className="panel__no">{'{ + }'} — ALL PROJECTS</div>
-          <div className="panel__inner">
-            <div>
-              <h3 className="panel__title">
-                See all
-                <br />
-                our work.
-              </h3>
-              <div className="panel__sub">すべての実績を見る</div>
-              <p className="panel__jp">ブランドの数だけ、立ち上げの物語がある。</p>
-            </div>
-            <span className="panel__cta">View all projects →</span>
-          </div>
-        </Link>
+        // sticky パネルスタックの外側に置く独立した帯。上部160px余白＋中央の少し大きめボタン
+        // （スタック内だと最後のパネルに覆われて埋もれるため外出し。.panel ではないので scroll choreography 対象外）。
+        <div className="works-all">
+          <Link className="works-all__btn" href="/projects" aria-label="すべての実績を見る">
+            View all works →
+          </Link>
+        </div>
       )}
-    </section>
+    </>
   );
 }

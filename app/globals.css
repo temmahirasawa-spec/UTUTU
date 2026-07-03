@@ -23,7 +23,8 @@
 
   /* font families — next/font supplies the --font-* variables */
   --mark: var(--font-bricolage), 'Helvetica Neue', sans-serif;
-  --sans: 'Helvetica Neue', Helvetica, Arial, var(--font-inter), var(--font-noto-jp), sans-serif;
+  /* 大見出し/ページタイトル — Zen Kaku Gothic New（Bold=700）を先頭に。Latin/JP とも Zen Kaku で表示 */
+  --sans: var(--font-zen-kaku), 'Helvetica Neue', Helvetica, Arial, var(--font-noto-jp), sans-serif;
   --jp: var(--font-noto-jp), 'Helvetica Neue', sans-serif;
   --mono: var(--font-jetbrains), monospace;
 }
@@ -170,8 +171,8 @@ img { display: block; max-width: 100%; }
 .hero-h1 .v { color: var(--v); }
 .hero-jp {
   font-family: var(--jp); font-weight: 500;
-  /* mobile は据え置き（min 0.86rem）、PC のみ一回り大きく（〜1.2倍） */
-  font-size: clamp(0.86rem, 1.25vw, 1.2rem);
+  /* PC は 26px に拡大。モバイル(<=880px)は元のサイズに戻す（下の @media 参照） */
+  font-size: 26px;
   line-height: 1.85; margin-top: 22px; max-width: 36em;
   color: var(--mid); letter-spacing: 0.02em;
   word-break: keep-all; line-break: strict;
@@ -194,8 +195,8 @@ img { display: block; max-width: 100%; }
 }
 .hero-content__right p {
   font-family: var(--mono); font-weight: 500;
-  font-size: clamp(0.66rem, 0.8vw, 0.8rem);
-  letter-spacing: 0.16em; line-height: 1.9;
+  font-size: 18px;
+  letter-spacing: 0.16em; line-height: 2.45;
   color: var(--mid); text-align: right;
   align-self: flex-end;
 }
@@ -204,7 +205,9 @@ img { display: block; max-width: 100%; }
 @media (max-width: 880px) {
   .hero-content { grid-template-columns: 1fr; gap: 28px; align-items: start; padding-top: 14vh; padding-bottom: 36vh; }
   .hero-content__right { justify-content: flex-start; padding-top: 0; align-items: flex-start; }
-  .hero-content__right p { text-align: left; align-self: flex-start; }
+  .hero-content__right p { text-align: left; align-self: flex-start; font-size: clamp(0.66rem, 0.8vw, 0.8rem); line-height: 1.9; }
+  /* モバイルは PC の拡大値（26px / 18px・行間2.45）を据え置き、元のサイズに戻す */
+  .hero-jp { font-size: clamp(0.86rem, 1.25vw, 1.2rem); }
 }
 
 /* ─── WORKS STAGE — asymmetric image rise ─── */
@@ -354,21 +357,27 @@ img { display: block; max-width: 100%; }
   .panel__cta { justify-self: start; }
 }
 
-/* 4th panel — 「すべての実績を見る」CTA。背景は後送（TODO: 実画像へ差し替え） */
-.panel--all .panel__bg {
-  background:
-    radial-gradient(75% 55% at 50% 30%, var(--v-glow) 0%, transparent 58%),
-    linear-gradient(165deg, #16201d 0%, var(--bg) 58%, var(--bg-2) 100%);
+/* 「すべての実績を見る」— フルスクリーンを廃止し、上部160px余白＋中央の大きめボタンの帯に */
+.works-all {
+  background: var(--bg);
+  padding: 160px clamp(24px, 5vw, 80px) 120px;
+  display: flex; justify-content: center; align-items: center;
 }
-.panel--all .panel__sub { color: var(--v); }
-.panel--all .panel__cta { background: rgba(95,208,168,.10); border-color: var(--v); color: var(--v); }
-.panel--all .panel__cta:hover { background: var(--v); color: var(--on-v); }
+.works-all__btn {
+  font-family: var(--mono); font-size: 14px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--v);
+  border: 1px solid var(--v); border-radius: 100px;
+  padding: 22px 46px;
+  display: inline-flex; align-items: center; gap: 14px;
+  background: rgba(95,208,168,.10);
+  transition: all .3s ease;
+}
+.works-all__btn:hover { background: var(--v); color: var(--on-v); border-color: var(--v); }
 
 /* パネル全体がリンク（whole-panel click）。CTA は span 化したので panel hover で点灯させる。 */
 .panel__bg { background: var(--bg-2); }   /* 画像ロード前の暗いフォールバック（白フラッシュ防止） */
 .panel__bg-video, .panel__bg video { position: absolute; inset: 0; width: 100%; height: 110%; object-fit: cover; filter: brightness(0.74) contrast(1.03); transform: scale(1); transform-origin: 50% 50%; will-change: transform; }
 .panel:hover .panel__cta { border-color: var(--v); color: var(--v); background: rgba(95,208,168,.08); }
-.panel--all:hover .panel__cta { background: var(--v); color: var(--on-v); }
 
 /* ─── PROJECTS LIST (/projects) ─── */
 .projects { position: relative; z-index: 1; background: var(--bg); color: var(--fg); }
@@ -833,10 +842,21 @@ img { display: block; max-width: 100%; }
 /* ─────────────────────────────────────────────
    PROJECT DETAIL (/projects/[slug]) — Spector構造を UTUTU トーンに翻訳
    ───────────────────────────────────────────── */
-.pcase { position: relative; z-index: 1; background: var(--bg); color: var(--fg); }
+/* ライトモード化: .pcase スコープでセマンティックトークンをライト値に再マップ。
+   配下の var(--bg)/--fg/--mid/--low/--line/--bg-2 が一括でライトに解決する（ACT2 と同トーン）。 */
+.pcase {
+  --bg: var(--l-bg);
+  --bg-2: #E9E6DF;          /* 画像枠の下地・overview の面（ページより僅かに濃い暖色グレー） */
+  --fg: var(--l-ink);
+  --mid: var(--l-mid);
+  --low: rgba(20,20,22,0.42);
+  --line: var(--l-line);
+  position: relative; z-index: 1; background: var(--bg); color: var(--fg);
+}
 
 /* 3-1 HERO — KV を sticky 固定、文字はスクロールでフェード（ProjectHero が opacity/y を駆動） */
-.pcase__hero { position: relative; height: 160vh; }
+/* HERO は写真バンドのまま（暗く落とした写真＋白文字）。本文だけライトにするため、ここでトークンを白系へ戻す。 */
+.pcase__hero { position: relative; height: 160vh; --fg: #F4F2ED; --mid: rgba(244,242,237,0.82); --low: rgba(244,242,237,0.5); }
 .pcase__hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--bg-2); }
 .pcase__hero-img { position: absolute; inset: 0; z-index: 0; }
 .pcase__hero-img img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6) contrast(1.04); animation: hero-breath 60s ease-in-out infinite alternate; }
@@ -862,8 +882,8 @@ img { display: block; max-width: 100%; }
 /* 3-2 OVERVIEW — 背景画像に重なるテキスト + 視差（ProjectOverview） */
 .pcase__overview { position: relative; overflow: hidden; padding: clamp(96px, 17vh, 200px) clamp(28px, 5vw, 80px); background: var(--bg-2); }
 .pcase__overview-bg { position: absolute; top: -10%; left: 0; right: 0; height: 120%; z-index: 0; }
-.pcase__overview-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.34) contrast(1.05) saturate(0.92); }
-.pcase__overview-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(10,10,11,0.72) 0%, rgba(10,10,11,0.82) 100%); }
+.pcase__overview-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(1.02) contrast(0.98) saturate(0.95); opacity: 0.14; }
+.pcase__overview-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(244,242,237,0.82) 0%, rgba(244,242,237,0.9) 100%); }
 .pcase__overview-inner { position: relative; z-index: 2; display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: start; max-width: 1280px; margin: 0 auto; }
 .pcase__intro { font-family: var(--jp); font-size: clamp(1.15rem, 1.9vw, 1.5rem); line-height: 1.85; color: var(--fg); opacity: 0.94; max-width: 30ch; }
 .pcase__meta { display: flex; flex-direction: column; }
@@ -889,8 +909,8 @@ img { display: block; max-width: 100%; }
 .story-full { position: relative; height: 92vh; min-height: 520px; overflow: hidden; background: var(--bg-2); }
 .story-full__img { position: absolute; inset: 0; }
 .story-full__img img { width: 100%; height: 100%; object-fit: cover; }
-.story-full::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(0deg, rgba(10,10,11,0.5) 0%, transparent 28%); }
-.story-full__cap { position: absolute; left: clamp(28px, 5vw, 80px); bottom: 28px; z-index: 2; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: rgba(244,242,237,0.82); display: inline-flex; align-items: center; gap: 12px; }
+.story-full::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(0deg, rgba(244,242,237,0.6) 0%, transparent 30%); }
+.story-full__cap { position: absolute; left: clamp(28px, 5vw, 80px); bottom: 28px; z-index: 2; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: rgba(20,20,22,0.72); display: inline-flex; align-items: center; gap: 12px; }
 .story-full__cap::before { content: ""; width: 24px; height: 1px; background: var(--v); }
 
 .story-split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 72px); align-items: center; padding: clamp(70px, 12vh, 150px) clamp(28px, 5vw, 80px); max-width: 1320px; margin: 0 auto; }
@@ -943,6 +963,27 @@ img { display: block; max-width: 100%; }
 .story-step__media--grid figure { aspect-ratio: 3 / 4; }
 @media (max-width: 880px) { .story-step__head { grid-template-columns: 1fr; gap: 12px; } .story-step__media--grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .story-step__media--two, .story-step__media--grid { grid-template-columns: 1fr; } }
+/* {04} ロゴ探索：4列×2行（実画像は 4:3 横なので横比率で・トリミング最小化） */
+.story-step__media--logo8 { grid-template-columns: repeat(4, 1fr); }
+.story-step__media--logo8 figure { aspect-ratio: 4 / 3; }
+@media (max-width: 880px) { .story-step__media--logo8 { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .story-step__media--logo8 { grid-template-columns: repeat(2, 1fr); } }
+/* {09}/{10} 2枚組：実画像が 3:4 縦なので縦比率で（landscape の media--two とは別枠） */
+.story-step__media--two-portrait { grid-template-columns: 1fr 1fr; }
+.story-step__media--two-portrait figure { aspect-ratio: 3 / 4; }
+@media (max-width: 560px) { .story-step__media--two-portrait { grid-template-columns: 1fr; } }
+/* {07} 髪型・服装：8列の密グリッド（12枚 → 8＋4）。portrait */
+.story-step__media--styling12 { grid-template-columns: repeat(8, 1fr); gap: clamp(8px, 1.2vw, 14px); }
+.story-step__media--styling12 figure { aspect-ratio: 3 / 4; }
+@media (max-width: 1100px) { .story-step__media--styling12 { grid-template-columns: repeat(6, 1fr); } }
+@media (max-width: 880px) { .story-step__media--styling12 { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 560px) { .story-step__media--styling12 { grid-template-columns: repeat(3, 1fr); } }
+/* {08} 実写化KV：2×2・16:9・動画対応 */
+.story-step__media--realize { grid-template-columns: repeat(2, 1fr); }
+.story-step__media--realize figure { aspect-ratio: 16 / 9; }
+@media (max-width: 560px) { .story-step__media--realize { grid-template-columns: 1fr; } }
+/* media 内の <video>（kenburns は img のみ対象なので動画は静止カバー） */
+.story-step__media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* 山場（ステップ6）: 中央寄せ・広い余白・大きな1枚で"間"を作る */
 .story-step--climax { max-width: none; padding: clamp(120px, 20vh, 240px) 0; }
@@ -962,6 +1003,18 @@ img { display: block; max-width: 100%; }
 @media (max-width: 880px) { .story-grid__inner--3, .story-grid__inner--4 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .story-grid__inner--2, .story-grid__inner--3, .story-grid__inner--4 { grid-template-columns: 1fr; } }
 
+/* frameSequence — 表情探索など「1コマずつ時間軸で見せる」横スクロールのフィルムストリップ */
+.story-frames { padding: clamp(64px, 11vh, 140px) clamp(28px, 5vw, 80px); max-width: 1180px; margin: 0 auto; }
+.story-frames__h { font-family: var(--sans); font-weight: 800; font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1.06; letter-spacing: -.025em; color: var(--fg); max-width: 18ch; word-break: keep-all; line-break: strict; }
+.story-frames__h .v { color: var(--v); }
+.story-frames__body { margin-top: 22px; display: flex; flex-direction: column; gap: 16px; max-width: 56ch; }
+.story-frames__body p { font-family: var(--jp); font-size: clamp(0.95rem, 1.2vw, 1.05rem); line-height: 1.95; color: var(--mid); word-break: keep-all; line-break: strict; }
+.story-frames__strip { margin-top: clamp(28px, 4vw, 44px); display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 14px; -webkit-overflow-scrolling: touch; }
+.story-frames__cell { position: relative; flex: 0 0 auto; width: clamp(150px, 20vw, 220px); aspect-ratio: 3 / 4; scroll-snap-align: start; overflow: hidden; border-radius: 4px; background: var(--bg-2); }
+.story-frames__cell.is-picked { outline: 2px solid var(--v); outline-offset: 2px; }
+.story-frames__cell.is-picked::after { content: "●"; position: absolute; top: 8px; right: 10px; font-size: 10px; color: var(--v); z-index: 2; }
+.story-frames__cap { margin-top: 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: var(--low); }
+
 /* スクロール進捗バー（章インジケータ・控えめ） */
 .pcase__progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--v); transform: scaleX(0); transform-origin: 0 50%; z-index: 90; }
 
@@ -969,7 +1022,7 @@ img { display: block; max-width: 100%; }
 .kenburns img { animation: kenburns 26s ease-in-out infinite alternate; will-change: transform; }
 @keyframes kenburns { from { transform: scale(1.05); } to { transform: scale(1.15) translate(-1.2%, 1%); } }
 
-/* 3-4 CLOSING CTA（dark） */
+/* 3-4 CLOSING CTA（light — .pcase のトークン再マップで自動的にライト） */
 .pcase__cta { padding: clamp(96px, 17vh, 210px) clamp(28px, 5vw, 80px); border-top: 1px solid var(--line); display: flex; flex-direction: column; align-items: flex-start; gap: 30px; }
 .pcase__cta h2 { font-family: var(--sans); font-weight: 800; font-size: clamp(2.2rem, 5.8vw, 4.8rem); line-height: 1.0; letter-spacing: -.03em; max-width: 18ch; color: var(--fg); }
 .pcase__cta h2 .v { color: var(--v); }

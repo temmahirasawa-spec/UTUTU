@@ -112,7 +112,10 @@ function StoryBlock({ b }: { b: ProjectBlock }) {
         </section>
       );
 
-    case 'processStep':
+    case 'processStep': {
+      const len = b.images?.length ?? 0;
+      // variant 明示があれば優先、無ければ枚数で one/two/grid（climax は別扱い）
+      const mediaVariant = b.variant ?? (b.climax ? 'climax' : len === 1 ? 'one' : len === 2 ? 'two' : 'grid');
       return (
         <section className={`story-step${b.climax ? ' story-step--climax' : ''}`}>
           <div className="story-step__head">
@@ -131,20 +134,21 @@ function StoryBlock({ b }: { b: ProjectBlock }) {
             </div>
           </div>
           {b.images && b.images.length > 0 && (
-            <div
-              className={`story-step__media story-step__media--${
-                b.climax ? 'climax' : b.images.length === 1 ? 'one' : b.images.length === 2 ? 'two' : 'grid'
-              }`}
-            >
+            <div className={`story-step__media story-step__media--${mediaVariant}`}>
               {b.images.map((img, i) => (
                 <figure key={i} className="kenburns reveal" style={{ transitionDelay: `${i * 0.08}s` }}>
-                  <SmartImage src={img.src} alt={img.alt} fill sizes="(max-width: 880px) 100vw, 40vw" style={{ objectFit: 'cover' }} />
+                  {img.video ? (
+                    <video src={img.video} autoPlay loop muted playsInline aria-label={img.alt} />
+                  ) : img.src ? (
+                    <SmartImage src={img.src} alt={img.alt} fill sizes="(max-width: 880px) 100vw, 40vw" style={{ objectFit: 'cover' }} />
+                  ) : null}
                 </figure>
               ))}
             </div>
           )}
         </section>
       );
+    }
 
     case 'imageGrid':
       return (
@@ -157,6 +161,38 @@ function StoryBlock({ b }: { b: ProjectBlock }) {
             ))}
           </div>
           {b.caption && <div className="story-grid__cap reveal">{b.caption}</div>}
+        </section>
+      );
+
+    case 'frameSequence':
+      return (
+        <section className="story-frames">
+          {b.kicker && <div className="story-text__kicker reveal">{b.kicker}</div>}
+          {b.heading && (
+            <h3 className="story-frames__h reveal" style={{ transitionDelay: '.05s' }}>
+              {accentize(b.heading)}
+            </h3>
+          )}
+          {b.body && (
+            <div className="story-frames__body">
+              {b.body.map((p, i) => (
+                <p key={i} className="reveal" style={{ transitionDelay: `${0.1 + i * 0.06}s` }}>
+                  {p}
+                </p>
+              ))}
+            </div>
+          )}
+          {/* 横スクロールのフィルムストリップ（1コマずつ）。picked=丸印の有力候補は強調。 */}
+          <div className="story-frames__strip reveal">
+            {b.frames.map((f, i) => (
+              <figure key={i} className={`story-frames__cell${f.picked ? ' is-picked' : ''}`}>
+                {f.src ? (
+                  <SmartImage src={f.src} alt={f.alt} fill sizes="(max-width: 880px) 40vw, 220px" style={{ objectFit: 'cover' }} />
+                ) : null}
+              </figure>
+            ))}
+          </div>
+          {b.caption && <div className="story-frames__cap reveal">{b.caption}</div>}
         </section>
       );
 

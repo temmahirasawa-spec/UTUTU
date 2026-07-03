@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=Inter:wght@400;500;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;family=Noto+Sans+JP:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  :root {
+    --v: #5FD0A8;
+    --bg: #0A0A0B;
+    --bg-2: #0E0E10;
+    --fg: #F4F2ED;
+    --mid: rgba(244,242,237,0.62);
+    --low: rgba(244,242,237,0.40);
+    --line: rgba(244,242,237,0.10);
+    --scrim: 0.78;
+    --sans: 'Helvetica Neue',Helvetica,Arial,'Inter','Noto Sans JP',sans-serif;
+    --jp: 'Noto Sans JP','Helvetica Neue',sans-serif;
+    --mono: 'JetBrains Mono',monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  @keyframes hero-breath { from { transform: scale(1); } to { transform: scale(1.06); } }
+</style>
+</helmet>
+<div ref="{{ setWrap }}" style="position:relative; width:100%; background:var(--bg); color:var(--fg); font-family:var(--sans); overflow:hidden;">
+
+  <!-- ════ HERO ════ -->
+  <section style="position:relative; height:100vh; min-height:600px; overflow:hidden; background:var(--bg-2);">
+    <div style="position:absolute; inset:0; z-index:0;">
+      <image-slot id="hero-kv" placeholder="00-HERO — 看板娘キービジュアル（KV）をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+    </div>
+    <div style="position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(10,10,11,0.5) 0%, rgba(10,10,11,0.2) 42%, rgba(10,10,11,var(--scrim)) 100%); pointer-events:none;"></div>
+    <div style="position:absolute; inset:0; z-index:2; pointer-events:none; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:0 clamp(28px,5vw,80px);">
+      <div style="font-family:var(--mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--low); margin-bottom:18px;">{04} — F&amp;B / BRANDING</div>
+      <h1 style="font-family:var(--sans); font-weight:800; font-size:clamp(2.8rem,9vw,8rem); line-height:0.95; letter-spacing:-0.035em; color:var(--fg);">MADEMOISELLE<br>CROQUETTE</h1>
+      <p style="font-family:var(--sans); font-weight:500; font-size:clamp(1.05rem,1.9vw,1.6rem); color:var(--mid); margin-top:22px; max-width:30ch; letter-spacing:-0.005em;">Crisp Out, Cream In.</p>
+      <p style="font-family:var(--jp); font-size:14px; color:var(--low); margin-top:14px;">マドモアゼルクロケット — クリームコロッケ専門店</p>
+      <div style="margin-top:48px; font-family:var(--mono); font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:var(--mid); display:inline-flex; align-items:center; gap:12px;">Scroll<span style="width:46px; height:1px; background:linear-gradient(90deg, var(--v), transparent);"></span></div>
+    </div>
+  </section>
+
+  <!-- ════ OVERVIEW ════ -->
+  <section style="position:relative; overflow:hidden; padding:clamp(96px,17vh,200px) clamp(28px,5vw,80px); background:var(--bg-2);">
+    <div style="position:absolute; top:-10%; left:0; right:0; height:120%; z-index:0;">
+      <image-slot id="overview-bg" placeholder="概要セクション 背景画像（ストーリー最初の画像を推奨）をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+    </div>
+    <div style="position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(10,10,11,calc(var(--scrim) - 0.06)) 0%, rgba(10,10,11,var(--scrim)) 100%); pointer-events:none;"></div>
+    <div style="position:relative; z-index:2; display:grid; grid-template-columns:1.1fr 1fr; gap:clamp(40px,6vw,96px); align-items:start; max-width:1280px; margin:0 auto;">
+      <p style="font-family:var(--jp); font-size:clamp(1.15rem,1.9vw,1.5rem); line-height:1.85; color:var(--fg); opacity:0.94; max-width:30ch; word-break:keep-all; line-break:strict;">クリームコロッケ専門店として構想された、YORKYS ENTERTAINMENT の新ブランド。出店イメージは大阪・梅田のカッパ横丁。日常の中の飲食店でありながら、ただの惣菜・揚げ物屋ではなく、"物語を持った洋食ブランド" として立ち上げました。</p>
+      <div style="display:flex; flex-direction:column;">
+        <div style="display:grid; grid-template-columns:124px 1fr; gap:20px; border-top:1px solid var(--line); padding:16px 0;">
+          <span style="font-family:var(--mono); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--low); padding-top:2px;">Industry</span>
+          <span style="font-family:var(--sans); font-size:15px; color:var(--fg); line-height:1.5;">飲食 / クリームコロッケ専門店</span>
+        </div>
+        <div style="display:grid; grid-template-columns:124px 1fr; gap:20px; border-top:1px solid var(--line); padding:16px 0;">
+          <span style="font-family:var(--mono); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--low); padding-top:2px;">Role</span>
+          <span style="font-family:var(--sans); font-size:15px; color:var(--fg); line-height:1.5;"><span style="display:block;">ブランド設計</span><span style="display:block;">ネーミング・タグライン</span><span style="display:block;">ストーリー設計</span><span style="display:block;">ロゴ・キャラクター</span><span style="display:block;">アートディレクション</span><span style="display:block;">AIプロンプト設計</span><span style="display:block;">資料化</span></span>
+        </div>
+        <div style="display:grid; grid-template-columns:124px 1fr; gap:20px; border-top:1px solid var(--line); padding:16px 0;">
+          <span style="font-family:var(--mono); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--low); padding-top:2px;">Deliverables</span>
+          <span style="font-family:var(--sans); font-size:15px; color:var(--fg); line-height:1.5;"><span style="display:block;">ブランドコンセプト</span><span style="display:block;">ロゴ（看板娘）</span><span style="display:block;">キャラクターバリエーション</span><span style="display:block;">キービジュアル方向性</span><span style="display:block;">ブランディング資料</span></span>
+        </div>
+        <div style="display:grid; grid-template-columns:124px 1fr; gap:20px; border-top:1px solid var(--line); padding:16px 0;">
+          <span style="font-family:var(--mono); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--low); padding-top:2px;">Approach</span>
+          <span style="font-family:var(--sans); font-size:15px; color:var(--fg); line-height:1.5;">AI壁打ち中心（ChatGPT ＋ 画像生成 ＋ デザインツール仕上げ）</span>
+        </div>
+        <div style="display:grid; grid-template-columns:124px 1fr; gap:20px; border-top:1px solid var(--line); padding:16px 0;">
+          <span style="font-family:var(--mono); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--low); padding-top:2px;">Timeframe</span>
+          <span style="font-family:var(--sans); font-size:15px; color:var(--fg); line-height:1.5;">資料化は約2日 ※要確認</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ STORY ════ -->
+  <div style="position:relative; z-index:1;">
+
+    <!-- textBlock: Team -->
+    <section style="padding:clamp(80px,14vh,168px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:inline-flex; align-items:center; gap:12px; font-family:var(--mono); font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--v); margin-bottom:26px;"><span style="width:24px; height:1px; background:var(--v);"></span>Team</div>
+      <h2 style="font-family:var(--sans); font-weight:800; font-size:clamp(2rem,5.4vw,4.4rem); line-height:1.02; letter-spacing:-0.03em; max-width:18ch; color:var(--fg); word-break:keep-all; line-break:strict;">事業の構想に、<br><span style="color:var(--v);">AI × デザイン</span>を掛ける。</h2>
+      <div style="margin-top:28px; display:flex; flex-direction:column; gap:18px; max-width:56ch;">
+        <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.9; color:var(--mid); word-break:keep-all; line-break:strict;">洋輔 ＝ 飲食ブランドを立ち上げる実業の文脈（YORKYS BRUNCH／PIECE OF BAKE／FROMA の延長）。</p>
+        <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.9; color:var(--mid); word-break:keep-all; line-break:strict;">天真 ＝ ブランドの人格設計、AIでの高速検証、ロゴから資料化までを一気通貫で。</p>
+      </div>
+    </section>
+
+    <!-- toolList -->
+    <section style="padding:clamp(80px,14vh,168px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:inline-flex; align-items:center; gap:12px; font-family:var(--mono); font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--v); margin-bottom:26px;"><span style="width:24px; height:1px; background:var(--v);"></span>Tools &amp; Technology</div>
+      <h2 style="font-family:var(--sans); font-weight:800; font-size:clamp(2rem,5.4vw,4.4rem); line-height:1.02; letter-spacing:-0.03em; max-width:18ch; color:var(--fg); word-break:keep-all; line-break:strict;">AI時代の、<br><span style="color:var(--v);">作り方。</span></h2>
+      <p style="font-family:var(--sans); font-weight:500; font-size:clamp(1.1rem,1.7vw,1.5rem); color:var(--fg); opacity:0.9; margin-top:28px; max-width:40ch; line-height:1.5;">このブランドは、AIとの壁打ちから生まれた。使ったツールを、役割とともに。</p>
+      <div style="margin-top:clamp(32px,5vw,52px);">
+        <article style="border-top:1px solid var(--line); padding:30px 0; display:grid; grid-template-columns:260px 1fr; gap:clamp(20px,4vw,60px); align-items:start;">
+          <div style="font-family:var(--mono); font-size:13px; letter-spacing:0.08em; color:var(--v); line-height:1.5;">ChatGPT</div>
+          <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.9; color:var(--mid); max-width:54ch; word-break:keep-all; line-break:strict;">コンセプト言語化・ストーリー・タグライン・プロンプト設計・資料構成の壁打ち。とりわけ「曖昧なイメージを、制作可能な要件へ分解する」役割。——「フランスっぽいけど古臭くない」「手描きだけど素人っぽくない」「キャラだけどキャラ商売っぽくしない」「ロゴとして使える抽象度」を、要件に翻訳する。</p>
+        </article>
+        <article style="border-top:1px solid var(--line); padding:30px 0; display:grid; grid-template-columns:260px 1fr; gap:clamp(20px,4vw,60px); align-items:start;">
+          <div style="font-family:var(--mono); font-size:13px; letter-spacing:0.08em; color:var(--v); line-height:1.5;">Midjourney / Stable Diffusion / ComfyUI</div>
+          <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.9; color:var(--mid); max-width:54ch; word-break:keep-all; line-break:strict;">ビジュアル探索・キャラクター案・ロゴ方向性・看板娘の雰囲気づくり。参照画像から、構図・服装・世界観を保ったまま生成・反復する。</p>
+        </article>
+        <article style="border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:30px 0; display:grid; grid-template-columns:260px 1fr; gap:clamp(20px,4vw,60px); align-items:start;">
+          <div style="font-family:var(--mono); font-size:13px; letter-spacing:0.08em; color:var(--v); line-height:1.5;">Photoshop / Illustrator / Figma</div>
+          <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.9; color:var(--mid); max-width:54ch; word-break:keep-all; line-break:strict;">AI生成を最終成果物にせず、ロゴ運用・ロックアップ・色・余白・視認性を整える。質感・合成・キービジュアル化まで、人の手で仕上げる。</p>
+        </article>
+      </div>
+      <p style="margin-top:clamp(36px,5vw,56px); font-family:var(--sans); font-weight:600; font-size:clamp(1.2rem,2vw,1.7rem); line-height:1.5; color:var(--fg); max-width:38ch; letter-spacing:-0.01em; word-break:keep-all; line-break:strict;">AIで作る、ではなく、<span style="color:var(--v);">AIを混ぜたアートディレクション。</span> AIは探索エンジン、最終判断と仕上げは人。</p>
+    </section>
+
+    <!-- textBlock: Process intro -->
+    <section style="padding:clamp(80px,14vh,168px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:inline-flex; align-items:center; gap:12px; font-family:var(--mono); font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--v); margin-bottom:26px;"><span style="width:24px; height:1px; background:var(--v);"></span>Process — 全 10 工程</div>
+      <h2 style="font-family:var(--sans); font-weight:800; font-size:clamp(2rem,5.4vw,4.4rem); line-height:1.02; letter-spacing:-0.03em; max-width:18ch; color:var(--fg); word-break:keep-all; line-break:strict;">ブランドを、<br><span style="color:var(--v);">高速で試食する。</span></h2>
+      <p style="font-family:var(--sans); font-weight:500; font-size:clamp(1.1rem,1.7vw,1.5rem); color:var(--fg); opacity:0.9; margin-top:28px; max-width:40ch; line-height:1.5;">曖昧なイメージを、制作可能な要件へ。立ち上げの全工程を、ひとつも削らずに辿ります。</p>
+    </section>
+
+    <!-- step 01 -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{01}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">商店街のコロッケ屋</h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">クリームコロッケ専門店として、何を売るブランドかを定義。出店イメージは大阪・梅田。</p>
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">まずは商店街にあるコロッケ屋を、現代的に見せたらどうなるかという観点で探っていく。</p><div><br></div><div>——</div><div>「昔懐かしの」イメージが強すぎて、新しいレシピに挑戦するブランドコンセプトと、ズレているかもしれない。</div><p></p><div><br></div><div><br></div><p></p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px);">
+        <figure style="position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-01" placeholder="01-BUSINESS — 業態整理 / カッパ横丁の空気をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"><img src="./01-mqs51n90.jpg" alt="01" style="max-width: 100%; height: auto; display: block; object-fit: cover"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- step 02 -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{02}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">名前とタグラインの<span style="color:var(--v);">確定</span></h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">Mademoiselle Croquette ／ Crisp Out, Cream In。</p>
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">洋食・フランスの空気・商品特徴（外はサクッ、中はクリーム）を、ブランド名とタグラインに圧縮した。</p><div><br></div><div>ブランド名はしっくりと来た。</div><div>古さの払拭と、新しさの探求がまだまだ必要と判断。</div><p></p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px);">
+        <figure style="position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-02" placeholder="02-NAME — ネーミング / タグライン案 / ロゴタイプ初期をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"><img src="./02-mqs5p2is.jpg" alt="02" style="max-width: 100%; height: auto; display: block; object-fit: cover"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- quote -->
+    <section style="padding:clamp(110px,22vh,260px) clamp(28px,8vw,160px); text-align:center;">
+      <p style="font-family:var(--sans); font-weight:700; font-size:clamp(1.8rem,4.6vw,3.6rem); line-height:1.18; letter-spacing:-0.02em; color:var(--fg); max-width:22ch; margin:0 auto; word-break:keep-all; line-break:strict;"><span style="color: var(--v); position: relative;">ストーリーが、<br></span><span style="color: #ffffffeb; position: relative">足りない。</span></p><p style="margin: 0; font-size: 16px; line-height: 1; font-family: 'Helvetica Neue', Helvetica, Arial, Inter, 'Noto Sans JP', sans-serif; position: absolute; left: 133px; top: 36px">Your text here</p><p></p>
+    </section>
+
+    <!-- step 03 -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{03}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">ブランドストーリーの<span style="color:var(--v);">構築</span></h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">フランスで腕を磨いた女性シェフが、日本の洋食文化とクリームコロッケに惹かれ、日本で店を開く——。</p>
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">物語を与えることで、「商品」から「登場人物のいる店」へと輪郭が変わっていく。</p><div><br></div><div>しかし、何かが足りない。表情か、ポーズか、はたまた...。</div><p></p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px);">
+        <figure style="position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-03" placeholder="03-STORY — シェフ設定画 / 世界観ラフをドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- step 04 (4-image grid) -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{04}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">ロゴ・キャラクターの<span style="color:var(--v);">探索</span></h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">少女。表情豊かな横顔。パーマヘア。</p><div>赤いワンピースに白いエプロン。版画調・手描き風で、色数は3色程度。</div><p></p>
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">狙いはあくまで、キャラクター作りではなく "看板娘ロゴ"。</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px); display:grid; gap:clamp(12px,2vw,20px); grid-template-columns:repeat(4,1fr);">
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-04-a" placeholder="04-LOGO — 探索 1" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-04-b" placeholder="04-LOGO — 探索 2" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-04-c" placeholder="04-LOGO — 探索 3" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-04-d" placeholder="04-LOGO — 探索 4" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-04-e" placeholder="04-LOGO — 探索 5" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-04-f" placeholder="04-LOGO — 探索 6" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-04-g" placeholder="04-LOGO — 探索 7" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-04-h" placeholder="04-LOGO — 探索 8" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- fullImage breather -->
+    
+
+    <!-- step 05 -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{05}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">実用性の<span style="color:var(--v);">検証</span></h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">ヘッダー／フッターでの視認性、1:1 比率での運用、シンボルを上に店名2行＋タグライン。文字は斜めにしない、小サイズでも潰れない。</p>
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">"絵" を "システム" へ。どこに置いても成立する強度を確かめた。</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px); display:grid; gap:clamp(12px,2vw,20px); grid-template-columns:1fr 1fr;">
+        <figure style="position:relative; aspect-ratio:4/3; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-05-a" placeholder="05-SYSTEM — ロゴ運用ルールをドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:4/3; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-05-b" placeholder="05-SYSTEM — サイズ・配置検証をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- step 06 climax -->
+    <section style="padding:clamp(120px,20vh,240px) 0;">
+      <div style="display:grid; grid-template-columns:1fr; max-width:820px; margin:0 auto; padding:0 clamp(28px,5vw,80px); text-align:center;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em; margin-bottom:18px;">{06}</div>
+        <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">表情・人格の<span style="color:var(--v);">発見</span></h3>
+        <div style="margin:22px auto 0; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+          <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">笑顔ではなく——目が合う、少し驚いた表情の看板娘。</p>
+          <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">「いらっしゃいませ！」ではなく、「え、見つかっちゃった？」。物語のある余白を、ひとつの表情に宿す。</p>
+          <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">可愛いけど媚びない。上品だけど冷たくない。レトロだけど古くない。</p>
+        </div>
+      </div>
+      <div style="margin:clamp(48px,8vh,100px) auto 0; max-width:1500px; padding:0 clamp(16px,3vw,40px);">
+        <figure style="position:relative; aspect-ratio:16/10; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-06" placeholder="06-EXPRESSION — 驚き顔の看板娘・決定案（最大の見せ場）をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- quote -->
+    <section style="padding:clamp(110px,22vh,260px) clamp(28px,8vw,160px); text-align:center;">
+      <p style="font-family:var(--sans); font-weight:700; font-size:clamp(1.8rem,4.6vw,3.6rem); line-height:1.18; letter-spacing:-0.02em; color:var(--fg); max-width:22ch; margin:0 auto; word-break:keep-all; line-break:strict;">「え、見つかっちゃった？」<br><span style="color:var(--v);">物語のある、余白。</span></p>
+    </section>
+
+    <!-- step 07 (8+4 image grid) -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1320px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start; max-width:1180px;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{07}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">髪型・服装の<span style="color:var(--v);">検討</span></h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">ヘアスタイルとユニフォームを考える。</p><p></p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px); display:grid; gap:clamp(10px,1.5vw,16px); grid-template-columns:repeat(8,1fr);">
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-a" placeholder="07 — 1" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-b" placeholder="07 — 2" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-c" placeholder="07 — 3" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-d" placeholder="07 — 4" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-e" placeholder="07 — 5" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-f" placeholder="07 — 6" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-g" placeholder="07 — 7" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-h" placeholder="07 — 8" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+      </div>
+      <div style="margin-top:clamp(10px,1.5vw,16px); display:grid; gap:clamp(10px,1.5vw,16px); grid-template-columns:repeat(4,1fr);">
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-i" placeholder="07 — 9" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-j" placeholder="07 — 10" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-k" placeholder="07 — 11" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);"><image-slot id="step-07-l" placeholder="07 — 12" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot></figure>
+      </div>
+    </section>
+
+    <!-- step 08 (実写化KV) -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{08}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">実写化キービジュアルの<span style="color:var(--v);">展開</span></h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">看板娘を、リアルな写真風キービジュアルへ。カフェの背景をぼかし、人物にフォーカス。</p>
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">「ロゴ → キャラクター → 広告ビジュアル → ブランド世界」へと展開していく。</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px); display:grid; gap:clamp(12px,2vw,20px); grid-template-columns:1fr 1fr;">
+        <!-- row 1 left: image -->
+        <figure style="position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-08-a" placeholder="08-KV — 実写風キービジュアル1をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <!-- row 1 right: video -->
+        <figure ref="{{ setVideoSlot }}" style="position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:4px; background:var(--bg-2); cursor:copy;" onDragOver="{{ handleVideoDragOver }}" onDrop="{{ handleVideoDrop }}">
+          <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ false }}">
+            <video style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" autoplay loop muted playsinline src="{{ videoSrc }}"></video>
+          </sc-if>
+          <sc-if value="{{ noVideo }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border:1.5px dashed var(--line);">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="2" y="8" width="22" height="20" rx="2.5" stroke="rgba(244,242,237,0.28)" stroke-width="1.5"></rect><path d="M24 15l10-5v16l-10-5V15z" stroke="rgba(244,242,237,0.28)" stroke-width="1.5"></path></svg>
+              <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--low);text-align:center;line-height:1.8;">08-VIDEO<br>動画をドロップ</span>
+            </div>
+          </sc-if>
+        </figure>
+        <!-- row 2 left: image -->
+        <figure style="position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-08-c" placeholder="08-KV — 実写風キービジュアル3をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <!-- row 2 right: image -->
+        <figure style="position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-08-d" placeholder="08-KV — 実写風キービジュアル4をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- step 09 -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{09}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">ビジュアルトーンの<span style="color:var(--v);">整理</span></h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">パリの空気感、クラシックすぎない現代ヨーロッパ。手作りの洋食感。クリーム色・赤・濃紺の少数色。版画調と紙のかすれ。ベタ塗りすぎない、女性的でエレガントなトーン。</p>
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">日本的なのっぺりは避ける。そして——「記号で殴らない」。エッフェル塔やベレー帽に逃げず、線・色・余白・佇まいで、ヨーロッパを感じさせる。</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px); display:grid; gap:clamp(12px,2vw,20px); grid-template-columns:1fr 1fr;">
+        <figure style="position:relative; aspect-ratio:4/3; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-09-a" placeholder="09-TONE — トーン参照1をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:4/3; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-09-b" placeholder="09-TONE — トーン参照2をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- imageGrid tone board -->
+    <section style="padding:clamp(36px,6vh,84px) clamp(28px,5vw,80px); max-width:1320px; margin:0 auto;">
+      <div style="display:grid; gap:clamp(12px,2vw,20px); grid-template-columns:repeat(4,1fr);">
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="tone-01" placeholder="トーンボード 1" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="tone-02" placeholder="トーンボード 2" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="tone-03" placeholder="トーンボード 3" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="tone-04" placeholder="トーンボード 4" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+      </div>
+      <div style="margin-top:16px; font-family:var(--mono); font-size:11px; letter-spacing:0.14em; color:var(--low);">Tone board — 記号で殴らない、ヨーロッパの佇まい。</div>
+    </section>
+
+    <!-- step 10 -->
+    <section style="padding:clamp(64px,11vh,140px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:132px 1fr; gap:clamp(20px,4vw,56px); align-items:start;">
+        <div style="font-family:var(--mono); font-weight:500; font-size:clamp(2.4rem,5vw,4rem); line-height:0.9; color:var(--v); letter-spacing:-0.02em;">{10}</div>
+        <div>
+          <h3 style="font-family:var(--sans); font-weight:800; font-size:clamp(1.7rem,4vw,3rem); line-height:1.06; letter-spacing:-0.025em; color:var(--fg); word-break:keep-all; line-break:strict;">資料化と<span style="color:var(--v);">プレゼン</span></h3>
+          <div style="margin-top:22px; display:flex; flex-direction:column; gap:16px; max-width:56ch;">
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">ブランドの人格・世界観・ビジュアル方向性・展開可能性までを、短期間（約2日 ※要確認）で見える資料に。</p>
+            <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.95; color:var(--mid); word-break:keep-all; line-break:strict;">洋輔さんへ提案し、一発で方向性が確定した。</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:clamp(32px,5vw,56px); display:grid; gap:clamp(12px,2vw,20px); grid-template-columns:1fr 1fr;">
+        <figure style="position:relative; aspect-ratio:4/3; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-10-a" placeholder="10-DECK — 提案資料1をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+        <figure style="position:relative; aspect-ratio:4/3; overflow:hidden; border-radius:4px; background:var(--bg-2);">
+          <image-slot id="step-10-b" placeholder="10-DECK — 提案資料2をドロップ" shape="rect" style="position:absolute;inset:0;width:100%;height:100%;"></image-slot>
+        </figure>
+      </div>
+    </section>
+
+    <!-- The Point -->
+    <section style="padding:clamp(80px,14vh,168px) clamp(28px,5vw,80px); max-width:1180px; margin:0 auto;">
+      <div style="display:inline-flex; align-items:center; gap:12px; font-family:var(--mono); font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--v); margin-bottom:26px;"><span style="width:24px; height:1px; background:var(--v);"></span>The Point</div>
+      <h2 style="font-family:var(--sans); font-weight:800; font-size:clamp(2rem,5.4vw,4.4rem); line-height:1.02; letter-spacing:-0.03em; max-width:18ch; color:var(--fg); word-break:keep-all; line-break:strict;">AIで絵を出した、<br>のではない。</h2>
+      <div style="margin-top:28px; display:flex; flex-direction:column; gap:18px; max-width:56ch;">
+        <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.9; color:var(--mid); word-break:keep-all; line-break:strict;">本質は、AIを使って "ブランドの可能性を高速に試食した" こと。</p>
+        <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.9; color:var(--mid); word-break:keep-all; line-break:strict;">どんな人格なら記憶に残るか。どんな線ならロゴになるか。どんな表情なら独自性が出るか。どんな物語ならブランド名と商品がつながるか。どんなビジュアルなら、店舗・パッケージ・SNS に展開できるか——。壁打ちしながら、何度も確かめた。</p>
+        <p style="font-family:var(--jp); font-size:clamp(0.95rem,1.2vw,1.05rem); line-height:1.9; color:var(--mid); word-break:keep-all; line-break:strict;">洋輔の事業構想に、天真の AI・デザイン・言語化・アートディレクションを掛け合わせ、短期間で "これはいける" と感じられるブランドの芯をつくった。</p>
+      </div>
+    </section>
+
+    <!-- final quote -->
+    <section style="padding:clamp(110px,22vh,260px) clamp(28px,8vw,160px); text-align:center;">
+      <p style="font-family: var(--sans); font-weight: 700; font-size: clamp(1.8rem,4.6vw,3.6rem); line-height: 1.18; letter-spacing: -0.02em; color: var(--fg); max-width: 22ch; margin: 0 auto; word-break: keep-all; line-break: strict">商品ブランドではなく、<br><span style="color:var(--v);">物語をまとった飲食ブランド</span>へ。</p>
+    </section>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;accent&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#5FD0A8&quot;, &quot;tsType&quot;: &quot;string&quot; },
+  &quot;scrim&quot;: { &quot;editor&quot;: &quot;float&quot;, &quot;default&quot;: 0.78, &quot;min&quot;: 0.4, &quot;max&quot;: 0.95, &quot;step&quot;: 0.02, &quot;tsType&quot;: &quot;number&quot; }
+}">
+class Component extends DCLogic {
+  state = { videoSrc: null };
+
+  applyVars() {
+    const el = this.wrap;
+    if (!el) return;
+    el.style.setProperty('--v', this.props.accent ?? '#5FD0A8');
+    el.style.setProperty('--scrim', String(this.props.scrim ?? 0.78));
+  }
+  componentDidMount() { this.applyVars(); }
+  componentDidUpdate() { this.applyVars(); }
+
+  handleVideoDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  }
+
+  handleVideoDrop(e) {
+    e.preventDefault();
+    const file = [...e.dataTransfer.files].find(f => f.type.startsWith('video/'));
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    this.setState({ videoSrc: url });
+  }
+
+  renderVals() {
+    const { videoSrc } = this.state;
+    return {
+      setWrap: (el) => { this.wrap = el; this.applyVars(); },
+      videoSrc,
+      hasVideo: !!videoSrc,
+      noVideo: !videoSrc,
+      handleVideoDragOver: (e) => this.handleVideoDragOver(e),
+      handleVideoDrop: (e) => this.handleVideoDrop(e),
+      setVideoSlot: (el) => { this.videoSlot = el; },
+    };
+  }
+}
+</script>
+</body>
+</html>

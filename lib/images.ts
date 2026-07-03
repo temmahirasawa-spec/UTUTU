@@ -33,6 +33,7 @@ import pobStoreInterior from '@/public/images/brands/piece-of-bake/store-interio
 import pobDonuts from '@/public/images/brands/piece-of-bake/donuts-lineup.jpg';
 
 import topCrepeInHand from '@/public/images/brands/top.jpg';
+import topKv from '@/public/images/top/kv.jpg'; // トップ KV（PIECE OF BAKE カウンター / ネオン）
 
 export const IMG = {
   fromaHero,
@@ -61,8 +62,8 @@ export const IMG = {
   topCrepeInHand,
 } as const;
 
-// ── HERO 背景: 空間性のある引きの構図（FROMA / Roma 店内全景） ──
-export const HERO_IMAGE: StaticImageData = fromaHero;
+// ── HERO 背景: PIECE OF BAKE のカウンター（ネオンサイン「PIECE OF Bake.」） ──
+export const HERO_IMAGE: StaticImageData = topKv;
 
 export type WorkImage = { src: StaticImageData; alt: string };
 

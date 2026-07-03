@@ -3,10 +3,13 @@ import { IMG } from './images';
 import fromaNaikan from '@/public/images/brands/froma/naikan.jpg';
 
 // ── 実績（projects）= /projects 一覧 と /projects/[slug] 詳細 の単一データソース ──
-// トップの注目3件（FEATURED）= YORKYS BRUNCH / PIECE OF BAKE / FROMA。背景は動画 or 画像。
+// トップの注目実績（FEATURED）= YORKYS BRUNCH / MADEMOISELLE CROQUETTE の2件。背景は動画 or 画像。
 // 見出し文字列の規約（描画側 accentize で解釈）: '\n' → <br>、 '*word*' → <span class="v">word</span>
 
 export type Img = StaticImageData | string;
+
+// 画像 or 動画の1メディア枠（processStep 用）。video があれば <video autoplay loop muted playsinline> を再生。
+export type Media = { src?: Img; video?: string; alt: string };
 
 export type ProjectBlock =
   | { type: 'fullImage'; src: Img; alt: string; caption?: string }
@@ -16,8 +19,11 @@ export type ProjectBlock =
   | { type: 'quote'; text: string }
   // ── 長尺ドキュメンタリー用（mademoiselle 等）。既存型はそのまま＝後方互換 ──
   | { type: 'toolList'; kicker?: string; heading?: string; lead?: string; tools: { name: string; role: string }[]; note?: string }
-  | { type: 'processStep'; no: string; heading: string; body: string[]; images?: { src: Img; alt: string }[]; climax?: boolean }
-  | { type: 'imageGrid'; images: { src: Img; alt: string }[]; caption?: string };
+  // variant: メディアのレイアウト指定（'logo8'=4列×2 / 'styling12'=8列密 / 'realize'=2×2・16:9・動画可）。未指定なら枚数で自動。
+  | { type: 'processStep'; no: string; heading: string; body: string[]; images?: Media[]; climax?: boolean; variant?: string }
+  | { type: 'imageGrid'; images: { src: Img; alt: string }[]; caption?: string }
+  // 表情探索など「1コマずつ時間軸で見せる」横スクロールのフィルムストリップ（picked=丸印の有力候補を強調）
+  | { type: 'frameSequence'; kicker?: string; heading?: string; body?: string[]; frames: { src?: Img; alt: string; picked?: boolean }[]; caption?: string };
 
 export type Overview = {
   intro: string;
@@ -53,6 +59,10 @@ export type Project = {
   story: ProjectBlock[];
 };
 
+// ダミー画像（picsum）と mademoiselle 実画像パスのヘルパ。realProjects からも参照するため、データ定義より前に置く（const の TDZ 回避）。
+const px = (seed: string, w = 1600, h = 1000) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
+const mq = (file: string) => `/images/mademoiselle/${file}`;
+
 const realProjects: Project[] = [
   // ── 1. YORKYS BRUNCH（背景=動画） ──
   {
@@ -71,49 +81,192 @@ const realProjects: Project[] = [
     hero: { video: '/videos/business-video-2.mp4', alt: 'YORKYS BRUNCH のブランドムービー' },
     overview: {
       intro:
-        'サーフィン好きのオーナーが、オーストラリアで体感した“ブランチ”という朝の豊かさを関西へ。2014年、兵庫・夙川に生まれた YORKYS の原点です。※開業年・場所は要確認。私たちはその“朝の時間”を、ロゴ・店舗グラフィック・Web・モバイルオーダーまで、ひとつのブランド体験へと翻訳しました。',
-      date: '2014〜 ※要確認',
-      industry: '飲食 / ブランチ・カフェ',
-      // TODO: 実際の担当範囲に修正
-      role: ['ブランド戦略', 'ロゴ・VI', 'アートディレクション', 'サイン計画'],
-      // TODO: 実際の納品物に修正
-      deliverables: ['ロゴ・VI', '店舗グラフィック', 'Web', 'モバイルオーダー', 'メニュー'],
+        'YORKYS グループの原点、YORKYS BRUNCH。サーフィンの朝に出会ったオーストラリアの“ブランチ”を関西へ——2014年、兵庫・夙川に生まれた一号店です。※開業年・場所は要確認。このページは、洋輔さんの原体験からロゴの意匠、グラフィック展開、空間、そして経営の広がりまでを、UTUTU の視点で紐解くドキュメントです。',
+      date: '2014年・兵庫 夙川 ※要確認',
+      industry: '飲食 / カフェレストラン（ブランチ）',
+      // TODO: 実際の担当範囲に合わせて修正
+      role: ['ブランド設計', 'ロゴ・VI', 'グラフィック展開', '空間ディレクション'],
+      // TODO: 実際の納品物に合わせて修正
+      deliverables: ['ロゴ', 'メニュー表', 'ポスター', 'ショップカード', 'グッズ', '空間グラフィック'],
     },
+    // ── 画像は全てダミー（px＝picsum）。実ファイルは public/images/brands/yorkys-brunch/ 配下に後日差し込み。
+    //    各ブロックの // TODO に想定パスを記載。数値・年号・担当範囲は // ※要確認 / TODO で仮置き。
     story: [
+      // ── C. 起源のストーリー（洋輔さんの原体験）──
       {
         type: 'textBlock',
         kicker: 'Origin',
         heading: '朝を、\n*目的地*にする。',
-        lead: 'サーフィンの後に食べる朝食のように——一日でいちばん豊かな時間を、外食の体験として。',
+        lead: 'サーフィンの後に食べる朝食のように——一日でいちばん豊かな時間を、ひとつの店に。',
         body: [
-          'YORKYS BRUNCH は、オーナーがオーストラリアで出会った“ブランチ”の文化を関西へ持ち帰り、2014年に夙川で生まれた YORKYS の原点。※開業年は要確認',
-          '私たちの仕事は、その“朝の豊かさ”を、ロゴ・空間・グラフィック・モバイルオーダーまで、ひとつのブランド体験へ翻訳することでした。',
+          '大学時代、授業よりサーフィンに明け暮れた洋輔さん。唯一夢中で聴いたのがマーケティングの講義だった。3年で休学し、オーストラリアへ渡る。※要確認',
+          '日の出とともに海へ入り、上がってからカフェでゆっくりとブランチを取る——その朝の居心地の良さが、のちの起業の直接の動機になった。',
+          '帰国・独立を経て、2014年、兵庫・夙川に YORKYS BRUNCH を開店。ここが YORKYS グループの原点になった。※開業年は要確認',
         ],
       },
-      { type: 'fullImage', src: IMG.brunchHero, alt: 'YORKYS BRUNCH の明るい店内、朝の光', caption: '夙川カトリック教会を望む、朝の光に満ちた店内。※ロケーションは要確認' },
-      {
-        type: 'splitImageText',
-        src: IMG.brunchExterior,
-        alt: 'YORKYS BRUNCH のファサードとサイン',
-        side: 'right',
-        heading: '看板は、\n*遠く*から読ませる。',
-        body: '通りの向こうからでも「ここだ」と分かるように。ロゴとサインは、近づくほど親しみが増すトーンで。視認する距離と角度まで合わせて整えました。',
-      },
+      // TODO: replace → public/images/brands/yorkys-brunch/origin/ （オーストラリアの朝・サーフィン・夙川店の空気）
+      { type: 'fullImage', src: px('yb-origin', 2200, 1240), alt: '朝の海とブランチの情景（ダミー）', caption: 'GOOD BRUNCH, GREAT DAY! — 一日は、朝の一皿から。' },
+      { type: 'quote', text: '日の出とともに、海へ。\n海から上がって、朝食へ。その循環が、*ひとつの店*になった。' },
+
+      // ── D. ロゴマークの意匠解説（このページ最大の見せ場）──
       {
         type: 'textBlock',
-        kicker: 'Signature',
-        heading: 'ふわふわの、\n*理由*。',
+        kicker: 'The Mark',
+        heading: 'なぜ、\n*卵*なのか。',
         body: [
-          '看板は、リコッタチーズを練り込んだスフレ系のふわふわパンケーキ。エッグベネディクトやフレンチトースト、夜にはワインも。',
-          '朝から夜まで“ちょっとだけリッチ”を貫く一皿を、ブランドの中心に据えました。',
+          'ブランチは、卵料理の時間。だからモチーフは卵——と言えば、それだけの話に聞こえる。',
+          'けれどこの卵には、もうひとつの絵が畳み込まれている。',
         ],
       },
+      // TODO: replace → public/images/brands/yorkys-brunch/logo/anatomy/ （卵の解剖図：割れ目=山の稜線 / 黄身=太陽 の対応を示す注釈グラフィック）
+      { type: 'fullImage', src: px('yb-logo-anatomy', 2200, 1300), alt: 'ロゴの解剖：卵＝山＋太陽（ダミー）', caption: '卵の割れ目は山の稜線、黄身は太陽。ひとつの形に、朝の情景が重ねられている。' },
+      {
+        type: 'textBlock',
+        heading: '割れ目は*山*、\n黄身は*太陽*。',
+        body: [
+          'オーストラリアの朝——山（波・岸）の向こうから、太陽が昇ってくる。サーフィンから上がった、あの光景。',
+          'それを一個の卵の輪郭に凝縮したのが、このロゴ。食材のアイコンではなく、創業の原体験そのものを図案化した“物語の圧縮”になっている。',
+        ],
+      },
+      { type: 'quote', text: 'ひとつの卵に、\nあの朝が、*畳まれている*。' },
+
+      // ── D-2. 表情の探索（卵シンボルのキャラクター化検証。1コマずつ時間軸で見せる）──
+      // TODO: この表情探索が最終的にどう使われたか（製品化されたか）を天真さんに確認
+      {
+        type: 'frameSequence',
+        kicker: 'Expressions',
+        heading: '卵に、\n*表情*を与える。',
+        body: [
+          '卵のシンボルに目や口を描き、どの顔がブランドになり得るか——手描きで大量に検証した当時の資料。',
+          '一枚のコンタクトシートではなく、試した順に一コマずつ。丸をつけた候補が、有力視されたもの。',
+        ],
+        // TODO: replace → public/images/brands/yorkys-brunch/logo/expressions/ （手描き表情候補を1コマずつ。picked=丸印の候補は強調）
+        frames: [
+          { src: px('yb-exp-01', 600, 800), alt: '表情候補 01（ダミー）' },
+          { src: px('yb-exp-02', 600, 800), alt: '表情候補 02（ダミー）' },
+          { src: px('yb-exp-03', 600, 800), alt: '表情候補 03（ダミー）', picked: true },
+          { src: px('yb-exp-04', 600, 800), alt: '表情候補 04（ダミー）' },
+          { src: px('yb-exp-05', 600, 800), alt: '表情候補 05（ダミー）' },
+          { src: px('yb-exp-06', 600, 800), alt: '表情候補 06（ダミー）', picked: true },
+          { src: px('yb-exp-07', 600, 800), alt: '表情候補 07（ダミー）' },
+          { src: px('yb-exp-08', 600, 800), alt: '表情候補 08（ダミー）' },
+          { src: px('yb-exp-09', 600, 800), alt: '表情候補 09（ダミー）' },
+          { src: px('yb-exp-10', 600, 800), alt: '表情候補 10（ダミー）', picked: true },
+          { src: px('yb-exp-11', 600, 800), alt: '表情候補 11（ダミー）' },
+          { src: px('yb-exp-12', 600, 800), alt: '表情候補 12（ダミー）' },
+        ],
+        caption: '横スクロールで、試作の厚みをたどる。※実資料は手描きグリッド（a〜k列×1〜7行程度）、後日差し替え',
+      },
+
+      // ── E. ロゴ探索プロセス＋パターン展開（探索→決定の物語）──
+      {
+        type: 'textBlock',
+        kicker: 'Exploration',
+        heading: 'この曲線に、\n*決まる*まで。',
+        lead: '2014年制作当時の検討資料を、探索から決定への道のりとして。',
+      },
+      // TODO: replace → public/images/brands/yorkys-brunch/logo/01-shape-exploration/ （卵のプロポーション比較）
+      {
+        type: 'imageGrid',
+        images: [
+          { src: px('yb-shape-1', 900, 1200), alt: '卵形状の探索 1（ダミー）' },
+          { src: px('yb-shape-2', 900, 1200), alt: '卵形状の探索 2（ダミー）' },
+          { src: px('yb-shape-3', 900, 1200), alt: '卵形状の探索 3（ダミー）' },
+          { src: px('yb-shape-4', 900, 1200), alt: '卵形状の探索 4（ダミー）' },
+        ],
+        caption: '① シンボル形状の探索 — 卵のプロポーションを、細身からふくよかまで何段階も。',
+      },
+      // TODO: replace → public/images/brands/yorkys-brunch/logo/02-symbol-pattern/ （卵モチーフの別方向のバリエーション）
       {
         type: 'imagePair',
-        left: { src: IMG.brunchCup, alt: 'YORKYS BRUNCH のドリンクカップ' },
-        right: { src: IMG.brunchFrontKv, alt: 'YORKYS BRUNCH 木彫りロゴの入口' },
+        left: { src: px('yb-sympat-a', 1400, 1050), alt: 'シンボルパターン展開 A（ダミー）' },
+        right: { src: px('yb-sympat-b', 1050, 1400), alt: 'シンボルパターン展開 B（ダミー）' },
       },
-      { type: 'quote', text: '休日の朝、いつもより少し遅く起きて。\nその一皿が、*いい一日*の合図になる。' },
+      // TODO: replace → public/images/brands/yorkys-brunch/logo/03-font-pattern/ （ワードマークの書体・組み検討）
+      {
+        type: 'imageGrid',
+        images: [
+          { src: px('yb-font-1', 900, 1200), alt: 'ロゴタイプ探索 1（ダミー）' },
+          { src: px('yb-font-2', 900, 1200), alt: 'ロゴタイプ探索 2（ダミー）' },
+          { src: px('yb-font-3', 900, 1200), alt: 'ロゴタイプ探索 3（ダミー）' },
+        ],
+        caption: '③ ロゴタイプの探索 — ワードマークの書体・組みを、シンボルとは独立して。',
+      },
+      // TODO: replace → public/images/brands/yorkys-brunch/logo/04-final-decision/ （確定ロックアップ）
+      { type: 'fullImage', src: px('yb-logo-final', 2200, 1300), alt: '最終ロゴのロックアップ（ダミー）', caption: '④ 決定 — シンボル＋ロゴタイプ＋タグラインのロックアップ。' },
+
+      // ── F. グラフィック応用展開（代表例の抜粋。網羅しない）──
+      {
+        type: 'textBlock',
+        kicker: 'Applications',
+        heading: 'ロゴは、\n*運用*で生きる。',
+        body: [
+          'メニュー、グッズ、什器——ロゴは置かれて初めてブランドになる。ここでは網羅ではなく、代表的な応用をいくつか。',
+        ],
+      },
+      // TODO: replace → public/images/brands/yorkys-brunch/applications/menu/ （木目背景＋卵ロゴのメニュー。表紙＋1〜2見開きを抜粋） / TODO: 洋輔さんへ確認
+      {
+        type: 'splitImageText',
+        src: px('yb-app-menu', 1400, 1050),
+        alt: 'メニューブック（ダミー）',
+        side: 'left',
+        heading: 'メニュー\n（*抜粋*）',
+        body: '木目調の背景に卵ロゴを配した、エディトリアルなメニュー。全◯ページ構成のうち、表紙と見開きを代表として。※総ページ数は要確認',
+      },
+      // TODO: replace → public/images/brands/yorkys-brunch/applications/goods/ （トートバッグ 着用＋単体）
+      {
+        type: 'imagePair',
+        left: { src: px('yb-app-tote-worn', 1400, 1050), alt: 'トートバッグ 着用（ダミー）' },
+        right: { src: px('yb-app-tote', 1050, 1400), alt: 'トートバッグ 単体（ダミー）' },
+      },
+      // TODO: replace → public/images/brands/yorkys-brunch/applications/goods/mug/ （マグ完成写真を主役に。陶器転写の製造仕様書は補足）
+      {
+        type: 'splitImageText',
+        src: px('yb-app-mug', 1400, 1050),
+        alt: 'マグカップ（ダミー）',
+        side: 'right',
+        heading: '絵ではなく、\n*仕様*として。',
+        body: 'タグラインとハート型の卵アイコンをあしらったマグ。陶器転写の製造仕様書（サイズ・絵付範囲）まで残り、ロゴが“運用ルール”として設計されていたことを示す。',
+      },
+
+      // ── G. 空間（インテリア＆ファサード）──
+      // TODO: replace → public/images/brands/yorkys-brunch/space/interior/ （白壁×木・大きな窓・高い天井。2Fメニューシートの店内写真を転用可）
+      {
+        type: 'splitImageText',
+        src: px('yb-space-interior', 1400, 1050),
+        alt: '店内（ダミー）',
+        side: 'left',
+        heading: '光を、\n*家具*に反射させる。',
+        body: '白い壁に木の家具。大きな窓から差す光が壁とテーブルに反射し、高い天井が開放感をつくる。カウンター、テーブル、ソファ——朝の過ごし方に、選択肢を。',
+      },
+      // TODO: replace → public/images/brands/yorkys-brunch/space/facade/ （夙川カトリック教会を望むファサード）
+      { type: 'fullImage', src: px('yb-space-facade', 2200, 1240), alt: 'ファサード（ダミー）', caption: '阪急夙川から徒歩4分、教会の向かい。窓の向こうに教会が見える立地。※ロケーションは要確認' },
+      { type: 'quote', text: '教会を望む、\n大きな窓の*朝*。' },
+
+      // ── H. 経営的な工夫（ビジネス視点）──
+      // NOTE: このセクションは「洋輔さんへの質問票（Achievement / ブランドストーリー用）」の回答が入り次第、精度を上げる前提。
+      {
+        type: 'textBlock',
+        kicker: 'Business',
+        heading: '生地の技術が、\n*グループ*を広げた。',
+        body: [
+          '「持ち帰りたい」という声に応え、パンケーキ生地を研究・改良。専用の温度と製法で独自食感のクレープ生地を開発し、これが YORKYS Creperie 誕生の起点になった（2018年・大阪梅田 ※要確認）。BRUNCH の生地技術が、グループ全体の起点になっている。',
+          '洋輔さんは「飲食にこだわらない」という考えで領域を拡張。サーフィン用の服からアパレル「Byron Days」を、Web・内装を手がけるデザイン会社を自ら立ち上げた時期も。“食”だけでなく“デザイン”に早くから自覚的だった——UTUTU に地続きの伏線。※現況は要確認',
+          '2024年7月時点で東京・名古屋・大阪・兵庫に計8店舗を運営。※店舗数・現在の数値は要確認（洋輔さんに最新値を確認）',
+        ],
+      },
+
+      // ── I. クロージング ──
+      {
+        type: 'textBlock',
+        kicker: 'The Point',
+        heading: '一皿ではなく、\n*一日*を売る。',
+        body: [
+          'YORKYS BRUNCH が設計したのは、メニューではなく“朝の過ごし方”。ロゴの一個の卵に、創業者の原体験を畳み込み、店・グラフィック・グッズ・空間へと展開した。',
+          'そしてその生地技術と美意識が、YORKYS グループ全体の起点になっていく。',
+        ],
+      },
+      { type: 'quote', text: 'ひとつの卵に、ひとつの朝を描いた。\nYORKYS BRUNCH は、*そこから*始まった。' },
     ],
   },
 
@@ -246,7 +399,7 @@ const realProjects: Project[] = [
 ];
 
 // ── プレースホルダ（実画像はあるがコピーは仮 / picsum） ──
-const px = (seed: string, w = 1600, h = 1000) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
+// （px / mq ヘルパは realProjects より前に移動済み＝TDZ回避のため）
 
 function picsumProject(order: number, title: string, nameLines: string[], category: string, jp: string): Project {
   const no = `{${String(order).padStart(2, '0')}}`;
@@ -283,9 +436,8 @@ function picsumProject(order: number, title: string, nameLines: string[], catego
 
 const placeholderProjects: Project[] = [
   // ── MADEMOISELLE CROQUETTE — プロセス・ドキュメンタリー型（縦長）。 ──
-  // 画像はすべてダミー（picsum）。本番画像の配置先 →
-  //   public/images/brands/mademoiselle-croquette/<step>/  （例 01-business, 06-expression …）
-  //   各 step の想定内容は各ブロックの // TODO コメント参照。ファイル名は後で確定。
+  // 実画像は public/images/mademoiselle/ に配置済み（mq() で参照）。被写体を view して各工程へ割当。
+  //   写真=01(店先)/kv01(外観)/35,37,38(実写)・動画=36.mp4 / ロゴロックアップ=04〜21 / キャラ図版=22〜34
   {
     slug: 'mademoiselle-croquette',
     no: '{04}',
@@ -299,8 +451,7 @@ const placeholderProjects: Project[] = [
     caption: '物語をまとった洋食ブランド。AIとの壁打ちで人格・ロゴ・世界観を立ち上げた、制作プロセスのドキュメント。',
     panelMeta: 'Branding · Logo · AI Direction · Deck',
     client: 'YORKYS Entertainment',
-    // TODO: replace → public/images/brands/mademoiselle-croquette/00-hero/ （看板娘キービジュアル / フルブリードKV）
-    hero: { src: px('mq-hero', 2000, 1300), alt: 'Mademoiselle Croquette のキービジュアル（ダミー）' },
+    hero: { src: mq('kv01.jpg'), alt: 'Mademoiselle Croquette の店舗イメージ（外観キービジュアル）' },
     overview: {
       intro:
         'クリームコロッケ専門店として構想された、YORKYS ENTERTAINMENT の新ブランド。出店イメージは大阪・梅田のカッパ横丁。日常の中の飲食店でありながら、ただの惣菜・揚げ物屋ではなく、"物語を持った洋食ブランド" として立ち上げました。',
@@ -347,23 +498,23 @@ const placeholderProjects: Project[] = [
         note: 'AIで作る、ではなく、*AIを混ぜたアートディレクション。* AIは探索エンジン、最終判断と仕上げは人。',
       },
 
-      // ── D. プロセス本編（全9工程・省略しない） ──
+      // ── D. プロセス本編（全10工程・省略しない） ──
       {
         type: 'textBlock',
-        kicker: 'Process — 全 9 工程',
+        kicker: 'Process — 全 10 工程',
         heading: 'ブランドを、\n*高速で試食する。*',
         lead: '曖昧なイメージを、制作可能な要件へ。立ち上げの全工程を、ひとつも削らずに辿ります。',
       },
       {
         type: 'processStep',
         no: '{01}',
-        heading: '業態の*整理*',
+        heading: '商店街のコロッケ屋',
         body: [
-          'クリームコロッケ専門店として、何を売るブランドかを定義。出店イメージは大阪・梅田のカッパ横丁。',
-          '最初に置いた前提は、ただひとつ——「ただの揚げ物屋にしない」。',
+          'クリームコロッケ専門店として、何を売るブランドかを定義。出店イメージは大阪・梅田。',
+          'まずは商店街にあるコロッケ屋を、現代的に見せたらどうなるかという観点で探っていく。',
+          '——\n「昔懐かしの」イメージが強すぎて、新しいレシピに挑戦するブランドコンセプトと、ズレているかもしれない。',
         ],
-        // TODO: replace → 01-business/ （業態整理のムードボード・出店イメージ・カッパ横丁の空気）
-        images: [{ src: px('mq-01', 1600, 1100), alt: '業態整理のイメージ（ダミー）' }],
+        images: [{ src: mq('01.jpg'), alt: '商店街のコロッケ屋・出店イメージ（梅田）' }],
       },
       {
         type: 'processStep',
@@ -372,11 +523,11 @@ const placeholderProjects: Project[] = [
         body: [
           'Mademoiselle Croquette ／ Crisp Out, Cream In。',
           '洋食・フランスの空気・商品特徴（外はサクッ、中はクリーム）を、ブランド名とタグラインに圧縮した。',
+          'ブランド名はしっくりと来た。\n古さの払拭と、新しさの探求がまだまだ必要と判断。',
         ],
-        // TODO: replace → 02-name/ （ネーミング/タグライン案・ロゴタイプ初期）
-        images: [{ src: px('mq-02', 1600, 1100), alt: 'ネーミング・タグライン案（ダミー）' }],
+        images: [{ src: mq('02.jpg'), alt: 'ネーミング・タグライン案' }],
       },
-      { type: 'quote', text: 'ただの揚げ物屋には、\n*しない。*' },
+      { type: 'quote', text: '*ストーリーが、*\n足りない。' },
       {
         type: 'processStep',
         no: '{03}',
@@ -384,29 +535,31 @@ const placeholderProjects: Project[] = [
         body: [
           'フランスで腕を磨いた女性シェフが、日本の洋食文化とクリームコロッケに惹かれ、日本で店を開く——。',
           '物語を与えることで、「商品」から「登場人物のいる店」へと輪郭が変わっていく。',
+          'しかし、何かが足りない。表情か、ポーズか、はたまた...。',
         ],
-        // TODO: replace → 03-story/ （ストーリーボード・シェフ設定画・世界観ラフ）
-        images: [{ src: px('mq-03', 1600, 1100), alt: 'ブランドストーリーのイメージ（ダミー）' }],
+        images: [{ src: mq('03.jpg'), alt: 'ブランドストーリー／ロゴの初期方向性' }],
       },
       {
         type: 'processStep',
         no: '{04}',
         heading: 'ロゴ・キャラクターの*探索*',
+        variant: 'logo8',
         body: [
-          '少女の横顔／全身シルエット／料理する姿。赤いワンピースに白いエプロン、濃紺の髪。版画調・手描き風で、色数は3色程度。',
-          '抽象化しすぎず、1色刷りでも成立し、細い線は避ける。狙いは、マスコットではなく "看板娘ロゴ"。',
+          '少女。表情豊かな横顔。パーマヘア。\n赤いワンピースに白いエプロン。版画調・手描き風で、色数は3色程度。',
+          '狙いはあくまで、キャラクター作りではなく "看板娘ロゴ"。',
         ],
-        // TODO: replace → 04-logo/ （ロゴ・看板娘の生成バリエーション群。4枚以上のグリッド想定）
+        // 04〜11：ロゴロックアップ生成バリエーション群（4列×2行）
         images: [
-          { src: px('mq-04a', 1200, 1500), alt: 'ロゴ探索バリエーション1（ダミー）' },
-          { src: px('mq-04b', 1200, 1500), alt: 'ロゴ探索バリエーション2（ダミー）' },
-          { src: px('mq-04c', 1200, 1500), alt: 'ロゴ探索バリエーション3（ダミー）' },
-          { src: px('mq-04d', 1200, 1500), alt: 'ロゴ探索バリエーション4（ダミー）' },
+          { src: mq('04.jpg'), alt: 'ロゴ探索バリエーション1' },
+          { src: mq('05.jpg'), alt: 'ロゴ探索バリエーション2' },
+          { src: mq('06.jpg'), alt: 'ロゴ探索バリエーション3' },
+          { src: mq('07.jpg'), alt: 'ロゴ探索バリエーション4' },
+          { src: mq('08.jpg'), alt: 'ロゴ探索バリエーション5' },
+          { src: mq('09.jpg'), alt: 'ロゴ探索バリエーション6' },
+          { src: mq('10.jpg'), alt: 'ロゴ探索バリエーション7' },
+          { src: mq('11.jpg'), alt: 'ロゴ探索バリエーション8' },
         ],
       },
-      // breather（フルスクリーン画像で"間"）
-      // TODO: replace → 04-logo/ （採用方向のロゴを大きく1枚）
-      { type: 'fullImage', src: px('mq-04-hero', 2200, 1240), alt: 'ロゴ方向性のキービジュアル（ダミー）', caption: 'From sketch to system — 看板娘ロゴの方向性。' },
       {
         type: 'processStep',
         no: '{05}',
@@ -415,10 +568,10 @@ const placeholderProjects: Project[] = [
           'ヘッダー／フッターでの視認性、1:1 比率での運用、シンボルを上に店名2行＋タグライン。文字は斜めにしない、小サイズでも潰れない。',
           '"絵" を "システム" へ。どこに置いても成立する強度を確かめた。',
         ],
-        // TODO: replace → 05-system/ （ロゴ運用・ロックアップ・サイズ検証・配置ルール）
+        // 12〜13：ロゴ運用・ロックアップ・サイズ検証
         images: [
-          { src: px('mq-05a', 1500, 1100), alt: 'ロゴ運用ルール（ダミー）' },
-          { src: px('mq-05b', 1500, 1100), alt: 'サイズ・配置検証（ダミー）' },
+          { src: mq('12.jpg'), alt: 'ロゴ運用ルール・ロックアップ' },
+          { src: mq('13.jpg'), alt: 'サイズ・配置検証' },
         ],
       },
       // ── 山場：ステップ6（驚き顔の看板娘）。フルスクリーン＋静かな余白 ──
@@ -432,64 +585,92 @@ const placeholderProjects: Project[] = [
           '「いらっしゃいませ！」ではなく、「え、見つかっちゃった？」。物語のある余白を、ひとつの表情に宿す。',
           '可愛いけど媚びない。上品だけど冷たくない。レトロだけど古くない。',
         ],
-        // TODO: replace → 06-expression/ （"驚き顔" 決定案。このページ最大の見せ場・大きく1枚）
-        images: [{ src: px('mq-06', 2200, 1380), alt: '驚いた表情の看板娘・決定案（ダミー）' }],
+        // 22：キャラのバスト（このページ最大の見せ場・大きく1枚）
+        images: [{ src: mq('22.jpg'), alt: '驚いた表情の看板娘・決定案' }],
       },
       { type: 'quote', text: '「え、見つかっちゃった？」\n*物語のある、余白。*' },
       {
         type: 'processStep',
         no: '{07}',
-        heading: '髪型・服装・実写化の*検討*',
+        heading: '髪型・服装の*検討*',
+        variant: 'styling12',
         body: [
-          'パーマヘア／赤いバンダナ／赤チェックのシャツ／白エプロン／青いスカートやジーンズ。三角巾バージョンは特に反応が良かった。',
-          'さらに看板娘を、リアルな写真風キービジュアルへ（カフェの背景をぼかし、人物にフォーカス）。「ロゴ → キャラクター → 広告ビジュアル → ブランド世界」へと展開していく。',
+          'ヘアスタイルとユニフォームを考える。',
         ],
-        // TODO: replace → 07-styling/ （髪型・服装バリエーション、三角巾版、実写風KV。3枚以上のグリッド想定）
+        // 23〜34：看板娘の髪型・服装バリエーション12枚（8列＋4列）
         images: [
-          { src: px('mq-07a', 1200, 1500), alt: '服装バリエーション1（ダミー）' },
-          { src: px('mq-07b', 1200, 1500), alt: '三角巾バージョン（ダミー）' },
-          { src: px('mq-07c', 1200, 1500), alt: '実写風キービジュアル（ダミー）' },
+          { src: mq('23.jpg'), alt: '髪型・服装バリエーション01' },
+          { src: mq('24.jpg'), alt: '髪型・服装バリエーション02' },
+          { src: mq('25.jpg'), alt: '髪型・服装バリエーション03' },
+          { src: mq('26.jpg'), alt: '髪型・服装バリエーション04' },
+          { src: mq('27.jpg'), alt: '髪型・服装バリエーション05' },
+          { src: mq('28.jpg'), alt: '髪型・服装バリエーション06' },
+          { src: mq('29.jpg'), alt: '髪型・服装バリエーション07' },
+          { src: mq('30.jpg'), alt: '髪型・服装バリエーション08' },
+          { src: mq('31.jpg'), alt: '髪型・服装バリエーション09' },
+          { src: mq('32.jpg'), alt: '髪型・服装バリエーション10' },
+          { src: mq('33.jpg'), alt: '髪型・服装バリエーション11' },
+          { src: mq('34.jpg'), alt: '髪型・服装バリエーション12' },
         ],
       },
       {
         type: 'processStep',
         no: '{08}',
+        heading: '実写化キービジュアルの*展開*',
+        variant: 'realize',
+        body: [
+          '看板娘を、リアルな写真風キービジュアルへ。カフェの背景をぼかし、人物にフォーカス。',
+          '「ロゴ → キャラクター → 広告ビジュアル → ブランド世界」へと展開していく。',
+        ],
+        // 2×2・16:9：左上=画像(35) / 右上=動画(36) / 左下=画像(37) / 右下=画像(38)
+        images: [
+          { src: mq('35.jpg'), alt: '実写風キービジュアル（カフェの看板娘）' },
+          { video: mq('36.mp4'), alt: '実写化キービジュアルのモーション' },
+          { src: mq('37.jpg'), alt: 'ユニフォーム（エプロン）' },
+          { src: mq('38.jpg'), alt: '衣装・スタイリング一式' },
+        ],
+      },
+      {
+        type: 'processStep',
+        no: '{09}',
         heading: 'ビジュアルトーンの*整理*',
+        variant: 'two-portrait', // 14〜15 は縦画像（3:4）なので縦2枚組で
         body: [
           'パリの空気感、クラシックすぎない現代ヨーロッパ。手作りの洋食感。クリーム色・赤・濃紺の少数色。版画調と紙のかすれ。ベタ塗りすぎない、女性的でエレガントなトーン。',
           '日本的なのっぺりは避ける。そして——「記号で殴らない」。エッフェル塔やベレー帽に逃げず、線・色・余白・佇まいで、ヨーロッパを感じさせる。',
         ],
-        // TODO: replace → 08-tone/ （ビジュアルトーンの参照・配色・質感サンプル）
+        // 14〜15：ビジュアルトーンの参照・配色・質感サンプル
         images: [
-          { src: px('mq-08a', 1500, 1100), alt: 'ビジュアルトーン参照1（ダミー）' },
-          { src: px('mq-08b', 1500, 1100), alt: 'ビジュアルトーン参照2（ダミー）' },
+          { src: mq('14.jpg'), alt: 'ビジュアルトーン参照1' },
+          { src: mq('15.jpg'), alt: 'ビジュアルトーン参照2' },
         ],
       },
       // breather（トーンボードのグリッド）
-      // TODO: replace → 08-tone/ （トーンボード。色・質感・モチーフを4枚程度で）
       {
         type: 'imageGrid',
+        // 16〜19：トーンボード（ロゴロックアップで色・質感・佇まいを4枚）
         images: [
-          { src: px('mq-tone-a', 1000, 1300), alt: 'トーンボード1（ダミー）' },
-          { src: px('mq-tone-b', 1000, 1300), alt: 'トーンボード2（ダミー）' },
-          { src: px('mq-tone-c', 1000, 1300), alt: 'トーンボード3（ダミー）' },
-          { src: px('mq-tone-d', 1000, 1300), alt: 'トーンボード4（ダミー）' },
+          { src: mq('16.jpg'), alt: 'トーンボード1' },
+          { src: mq('17.jpg'), alt: 'トーンボード2' },
+          { src: mq('18.jpg'), alt: 'トーンボード3' },
+          { src: mq('19.jpg'), alt: 'トーンボード4' },
         ],
         caption: 'Tone board — 記号で殴らない、ヨーロッパの佇まい。',
       },
       {
         type: 'processStep',
-        no: '{09}',
+        no: '{10}',
         heading: '資料化と*プレゼン*',
+        variant: 'two-portrait', // 20〜21 は縦画像（3:4）なので縦2枚組で
         body: [
           'ブランドの人格・世界観・ビジュアル方向性・展開可能性までを、短期間（約2日 ※要確認）で見える資料に。',
           '洋輔さんへ提案し、一発で方向性が確定した。',
           // ※要確認: 「この資料だけで100万円の価値」と評された、という逸話あり。誇張に見えないよう本文では触れていない。
         ],
-        // TODO: replace → 09-deck/ （提案資料のページ・ブランドブックの抜粋）
+        // 20〜21：提案資料・ブランドブックの抜粋
         images: [
-          { src: px('mq-09a', 1600, 1100), alt: '提案資料1（ダミー）' },
-          { src: px('mq-09b', 1600, 1100), alt: '提案資料2（ダミー）' },
+          { src: mq('20.jpg'), alt: '提案資料1' },
+          { src: mq('21.jpg'), alt: '提案資料2' },
         ],
       },
 
@@ -516,8 +697,11 @@ const placeholderProjects: Project[] = [
 
 export const projects: Project[] = [...realProjects, ...placeholderProjects].sort((a, b) => a.order - b.order);
 
-// トップに出す実績（注目3件 = BRUNCH / PIECE OF BAKE / FROMA）
-export const FEATURED: Project[] = projects.filter((p) => !p.placeholder).slice(0, 3);
+// トップに出す注目実績。順序を slug で明示（YORKYS BRUNCH → MADEMOISELLE CROQUETTE の2件）。
+const FEATURED_SLUGS = ['yorkys-brunch', 'mademoiselle-croquette'] as const;
+export const FEATURED: Project[] = FEATURED_SLUGS
+  .map((slug) => projects.find((p) => p.slug === slug))
+  .filter((p): p is Project => Boolean(p));
 
 export const getProject = (slug: string): Project | undefined => projects.find((p) => p.slug === slug);
 export const getAllSlugs = (): string[] => projects.map((p) => p.slug);
